@@ -73,7 +73,7 @@ Bandi et al. (2018). *From detection of individual metastases to classification 
 | `generate_diagrams.py` | Generates pipeline flowchart and OT architecture diagram |
 | `run_train_and_eval.sh` | Master shell script: trains all 6 models sequentially, then evaluates |
 
-### Output Files (`results/`)
+### Output Files (`preds/`)
 
 Prediction CSVs — one per method per test center. Each has two columns: `label` (ground truth) and `pred` (sigmoid probability).
 
@@ -96,12 +96,12 @@ Prediction CSVs — one per method per test center. Each has two columns: `label
 
 | File | Description |
 |---|---|
-| `roc_curves_final.png` | ROC curves for all 6 methods, Centers 1–4 combined |
-| `auc_per_center_final.png` | Per-center AUC grouped bar chart |
-| `auc_per_center_line.png` | Per-center AUC line plot (cross-scanner generalization view) |
-| `comparison_final.png` | Visual stain normalization comparison on a Center 4 patch |
-| `pipeline_flowchart.png` | End-to-end training and evaluation pipeline diagram |
-| `ot_architecture.png` | OT normalization algorithm architecture diagram |
+| `old auc.jpeg` | ROC curves for all 6 methods trained on pre-trained ResNet18 |
+| `new auc.jpeg` | ROC curves for all 6 methods trained on ResNet18 (trained from scratch) |
+| `old center.jpeg` | Per-center AUC line plot (cross-scanner generalization view) on pre-trained ResNet18 |
+| `new center.jpeg` | Per-center AUC line plot (cross-scanner generalization view) on ResNet18 (trained from scratch) |
+| `vis comparison.jpeg` | Visual stain normalization comparison on a Center 4 patch |
+| `OT architecture.jpeg` | OT normalization algorithm architecture diagram |
 
 ### StainNet Weights (`stainnet_weights/`)
 
