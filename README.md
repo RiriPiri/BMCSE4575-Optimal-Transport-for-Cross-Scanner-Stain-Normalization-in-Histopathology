@@ -5,7 +5,7 @@
 
 ## Project Overview
 
-This project benchmarks five stain normalization methods — Reinhard, Macenko, Vahadane, Optimal Transport (OT), and StainNet — against an unnormalized baseline for cross-scanner tumor detection on the CAMELYON17 dataset. A ResNet18 classifier is trained from scratch on Center 0 patches with each normalization method applied consistently during both training and evaluation. Models are then evaluated on four held-out test scanners (Centers 1–4) using AUC.
+Deep learning algorithms trained on data captured from one scanner do not generalize well to data from another scanner, largely owing to the difference in tissue staining procedure during preparation, which is an example of a larger phenomenon referred to as the domain shift problem in deep learning applications \cite{stacke2021}. This research evaluates the effectiveness of five stain normalization techniques, Reinhard color transform \cite{reinhard2001}, Macenko stain matrix decomposition \cite{macenko2009}, Vahadane sparse stain separation \cite{vahadane2016}, Optimal Transport in optical density \cite{flamary2021}, and StainNet \cite{kang2021}, in detecting tumor using the CAMELYON17 dataset \cite{bandi2019} that spans multiple scanners. Pre-trained ResNet18 model and one ResNet18 trained from scratch, \cite{he2016} are trained with normalization applied throughout training and validation phases, according to the methodology used by Tellez et al.\ \cite{tellez2019} on data from Center 0, with performance evaluated in four out-of-domain test sets (Centers 1 to 4) using area under the ROC curve (AUC). Optimal Transport achieved a reasonable performance (AUC 0.857) and marginally performed better the non-normalized approach (AUC 0.845).
 
 ---
 
@@ -49,7 +49,17 @@ The CAMELYON17 dataset is **not included** in this submission due to its size (~
 **Reference:**  
 Bandi et al. (2018). *From detection of individual metastases to classification of lymph node status at the patient level: The CAMELYON17 challenge.* IEEE Transactions on Medical Imaging, 38(2), 550–560.
 
+**Expected structure after extraction:**
+```
+BMCS4575/
+├── patches/               # Pre-extracted 96×96 PNG patches
+│   ├── patient_001_node_0/
+│   │   └── patch_patient_001_node_0_x_XXXX_y_XXXX.png
+│   └── ...
+└── metadata.csv           # Patch-level metadata with labels and center 
+```
 
+`metadata.csv` **is included** in this submission.
 
 ---
 
@@ -72,7 +82,7 @@ Bandi et al. (2018). *From detection of individual metastases to classification 
 | `generate_figures.py` | Combined figure generation script (comparison + bar chart + ROC) |
 | `run_train_and_eval.sh` | Master shell script: trains all 6 models sequentially, then evaluates |
 
-### Output Files (`preds/`)
+### Output Files (`results/`)
 
 Prediction CSVs — one per method per test center. Each has two columns: `label` (ground truth) and `pred` (sigmoid probability).
 
@@ -95,12 +105,12 @@ Prediction CSVs — one per method per test center. Each has two columns: `label
 
 | File | Description |
 |---|---|
-| `old auc.jpeg` | ROC curves for all 6 methods trained on pre-trained ResNet18 |
-| `new auc.jpeg` | ROC curves for all 6 methods trained on ResNet18 (trained from scratch) |
-| `old center.jpeg` | Per-center AUC line plot (cross-scanner generalization view) on pre-trained ResNet18 |
-| `new center.jpeg` | Per-center AUC line plot (cross-scanner generalization view) on ResNet18 (trained from scratch) |
-| `vis comparison.jpeg` | Visual stain normalization comparison on a Center 4 patch |
-| `OT architecture.jpeg` | OT normalization algorithm architecture diagram |
+| `roc_curves_final.png` | ROC curves for all 6 methods, Centers 1–4 combined |
+| `auc_per_center_final.png` | Per-center AUC grouped bar chart |
+| `auc_per_center_line.png` | Per-center AUC line plot (cross-scanner generalization view) |
+| `comparison_final.png` | Visual stain normalization comparison on a Center 4 patch |
+| `pipeline_flowchart.png` | End-to-end training and evaluation pipeline diagram |
+| `ot_architecture.png` | OT normalization algorithm architecture diagram |
 
 ### StainNet Weights (`stainnet_weights/`)
 
@@ -157,7 +167,6 @@ done
 source venv/bin/activate
 python src/plot_roc_final.py       # ROC curves + bar chart
 python src/plot_auc_line.py        # Line plot
-python src/generate_diagrams.py    # Pipeline + OT architecture diagrams
 ```
 
 ### Key Parameters
@@ -180,13 +189,13 @@ python src/generate_diagrams.py    # Pipeline + OT architecture diagrams
 | Method | Center 1 | Center 2 | Center 3 | Center 4 | **Mean AUC** |
 |---|---|---|---|---|---|
 | No Normalization | 0.940 | 0.966 | 0.973 | 0.503 | 0.845 |
-| Optimal Transport | 0.934 | 0.750 | 0.977 | 0.768 | 0.857 |
+| **Optimal Transport** | **0.934** | **0.750** | **0.977** | **0.768** | **0.857** |
 | Macenko | 0.925 | 0.964 | 0.961 | 0.673 | 0.881 |
 | **Reinhard** | **0.943** | 0.954 | **0.974** | **0.919** | **0.947** |
 | Vahadane | 0.877 | 0.872 | 0.946 | 0.676 | 0.843 |
 | StainNet | 0.910 | 0.940 | 0.907 | 0.718 | 0.869 |
 
-**Key finding:** Reinhard normalization achieves the best cross-scanner generalization, particularly at Center 4 (0.919 vs 0.503 baseline — from near-random to strong performance).
+**Key finding:** Stain normalization can be an important step toward cross-scanner generalizability in tumor detection from H\&E-stained tissue. The simplest color matching approaches can achieve high accuracy and robustness at minimal computational cost. The more sophisticated approaches need to be properly tuned to exploit their potential. Further research is needed on the use of end-to-end learning-based normalization and domain adaptation methods.
 
 ---
 
