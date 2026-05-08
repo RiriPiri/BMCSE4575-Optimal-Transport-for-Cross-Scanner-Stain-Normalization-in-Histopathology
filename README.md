@@ -70,7 +70,6 @@ Bandi et al. (2018). *From detection of individual metastases to classification 
 | `plot_roc_final.py` | Generates ROC curves and per-center AUC bar chart from prediction CSVs |
 | `plot_auc_line.py` | Generates line-plot version of per-center AUC (cross-scanner generalization) |
 | `generate_figures.py` | Combined figure generation script (comparison + bar chart + ROC) |
-| `generate_diagrams.py` | Generates pipeline flowchart and OT architecture diagram |
 | `run_train_and_eval.sh` | Master shell script: trains all 6 models sequentially, then evaluates |
 
 ### Output Files (`preds/`)
