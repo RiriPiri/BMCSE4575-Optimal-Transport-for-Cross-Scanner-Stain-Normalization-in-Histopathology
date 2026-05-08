@@ -49,17 +49,7 @@ The CAMELYON17 dataset is **not included** in this submission due to its size (~
 **Reference:**  
 Bandi et al. (2018). *From detection of individual metastases to classification of lymph node status at the patient level: The CAMELYON17 challenge.* IEEE Transactions on Medical Imaging, 38(2), 550–560.
 
-**Expected structure after extraction:**
-```
-BMCS4575/
-├── patches/               # Pre-extracted 96×96 PNG patches
-│   ├── patient_001_node_0/
-│   │   └── patch_patient_001_node_0_x_XXXX_y_XXXX.png
-│   └── ...
-└── metadata.csv           # Patch-level metadata with labels and center assignments
-```
 
-`metadata.csv` **is included** in this submission.
 
 ---
 
